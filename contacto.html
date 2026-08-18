@@ -93,6 +93,11 @@ section { padding: 88px 0; }
 
 .map-wrap { border-radius: 16px; overflow: hidden; border: 1px solid var(--color-border); min-height: 340px; height: 100%; }
 .map-wrap iframe { width: 100%; height: 100%; min-height: 340px; border: 0; display: block; }
+.map-placeholder { height: 100%; min-height: 340px; background: var(--color-cream); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px; }
+.map-placeholder .why-icon { width: 56px; height: 56px; margin-bottom: 16px; }
+.map-placeholder .why-icon svg { width: 26px; height: 26px; }
+.map-placeholder p { font-size: 0.85rem; color: #6b5744; max-width: 320px; margin-bottom: 20px; }
+.map-placeholder a.map-link { display: block; margin-top: 14px; font-size: 0.85rem; text-decoration: underline; color: var(--color-primary-dark); }
 
 .btn-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 28px; }
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 30px; font-weight: 600; letter-spacing: 0.3px; transition: all 0.25s ease; border: 2px solid transparent; }
@@ -112,6 +117,10 @@ footer.site-footer { background: var(--color-dark); color: #cbb89e; padding: 56p
 footer h4 { color: #fff; font-size: 0.95rem; margin-bottom: 16px; letter-spacing: 0.5px; }
 footer ul li { margin-bottom: 10px; font-size: 0.9rem; }
 footer a:hover { color: var(--color-tan); }
+.footer-legal { text-align: center; font-size: 0.8rem; margin-bottom: 14px; color: #96826a; }
+.footer-legal a { color: #cbb89e; }
+.footer-legal a:hover { color: var(--color-tan); text-decoration: underline; }
+.footer-legal .sep { margin: 0 8px; color: #6b5744; }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 0.82rem; color: #96826a; }
 
 @media (max-width: 900px) {
@@ -191,13 +200,13 @@ footer a:hover { color: var(--color-tan); }
         </div>
       </div>
 
-      <div class="map-wrap">
-        <iframe
-          src="https://www.google.com/maps?q=Calle+Ba%C3%B1os+6+Sevilla&output=embed"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="Ubicación de Zapatero Cordero en Calle Baños 6, Sevilla">
-        </iframe>
+      <div class="map-wrap" id="mapWrap">
+        <div class="map-placeholder" id="mapPlaceholder">
+          <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <p>Al cargar el mapa interactivo se aceptan cookies de terceros de Google Maps. Consulta nuestra <a href="politica-cookies.html" style="text-decoration:underline;">Política de Cookies</a>.</p>
+          <button type="button" class="btn btn-dark" id="loadMapBtn">Ver mapa interactivo</button>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Calle+Ba%C3%B1os+6+Sevilla" target="_blank" rel="noopener">Abrir en Google Maps ↗</a>
+        </div>
       </div>
     </div>
   </div>
@@ -235,6 +244,9 @@ footer a:hover { color: var(--color-tan); }
         </ul>
       </div>
     </div>
+    <div class="footer-legal">
+      <a href="aviso-legal.html">Aviso Legal</a><span class="sep">·</span><a href="politica-privacidad.html">Política de Privacidad</a><span class="sep">·</span><a href="politica-cookies.html">Política de Cookies</a>
+    </div>
     <div class="footer-bottom">© 2026 Zapatero Cordero — Sevilla. Todos los derechos reservados.</div>
   </div>
 </footer>
@@ -244,6 +256,13 @@ footer a:hover { color: var(--color-tan); }
   var nav = document.querySelector('.main-nav');
   if (toggle && nav) {
     toggle.addEventListener('click', function () { nav.classList.toggle('open'); });
+  }
+  var loadMapBtn = document.getElementById('loadMapBtn');
+  if (loadMapBtn) {
+    loadMapBtn.addEventListener('click', function () {
+      document.getElementById('mapWrap').innerHTML =
+        '<iframe src="https://www.google.com/maps?q=Calle+Ba%C3%B1os+6+Sevilla&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación de Zapatero Cordero en Calle Baños 6, Sevilla"></iframe>';
+    });
   }
 </script>
 </body>

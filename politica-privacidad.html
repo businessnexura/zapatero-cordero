@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Política de Privacidad | Zapatero Cordero</title>
+<meta name="description" content="Política de privacidad del sitio web de Zapatero Cordero, en cumplimiento del RGPD y la LOPDGDD." />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="Zapatero Cordero" />
+<link rel="canonical" href="politica-privacidad.html" />
+<meta name="theme-color" content="#2b1b12" />
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --color-primary: #8b5e34;
+  --color-primary-dark: #6b4423;
+  --color-dark: #241610;
+  --color-cream: #f8f2e9;
+  --color-tan: #c9a66b;
+  --color-text: #3a2a1e;
+  --color-border: #e4d8c6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; color: var(--color-text); background: var(--color-cream); line-height: 1.6; }
+h1, h2, h3, .logo-text { font-family: 'Playfair Display', serif; font-weight: 600; color: var(--color-dark); }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+.container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+.site-header { position: sticky; top: 0; z-index: 100; background: rgba(248,242,233,0.95); backdrop-filter: blur(6px); border-bottom: 1px solid var(--color-border); }
+.header-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 1140px; margin: 0 auto; gap: 20px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand svg, .brand-mark { width: 44px; height: 44px; color: var(--color-primary); flex-shrink: 0; object-fit: contain; }
+.brand-text { display: flex; flex-direction: column; font-family: 'Playfair Display', serif; font-size: 1.2rem; line-height: 1.15; color: var(--color-dark); }
+.brand-text b { font-weight: 600; }
+.brand-text small { font-family: 'Jost', sans-serif; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--color-primary); margin-top: 4px; }
+nav.main-nav { display: flex; align-items: center; gap: 32px; }
+nav.main-nav a { font-size: 0.95rem; letter-spacing: 0.3px; padding: 4px 0; }
+nav.main-nav a.active, nav.main-nav a:hover { color: var(--color-primary); }
+.header-phone { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--color-primary-dark); border: 1.5px solid var(--color-primary); padding: 8px 16px; border-radius: 30px; transition: all 0.25s ease; white-space: nowrap; }
+.header-phone svg { width: 16px; height: 16px; }
+.header-phone:hover { background: var(--color-primary); color: #fff; }
+.menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+.menu-toggle span { width: 26px; height: 2px; background: var(--color-dark); }
+
+.page-hero { background: linear-gradient(160deg, var(--color-dark), var(--color-primary-dark)); color: #fff; padding: 80px 0 48px; text-align: center; }
+.page-hero h1 { color: #fff; }
+.page-hero p { color: #e7d8c1; margin-top: 10px; }
+
+section { padding: 64px 0; }
+
+.legal-content { max-width: 760px; margin: 0 auto; background: #fff; border: 1px solid var(--color-border); border-radius: 16px; padding: 48px; }
+.legal-content h2 { font-size: 1.25rem; margin: 32px 0 12px; }
+.legal-content h2:first-child { margin-top: 0; }
+.legal-content p { margin-bottom: 14px; color: #4a382a; font-size: 0.96rem; }
+.legal-content ul { margin: 0 0 14px 0; }
+.legal-content ul li { color: #4a382a; font-size: 0.96rem; padding: 4px 0; }
+.legal-content strong { color: var(--color-dark); }
+.legal-content a.inline-link { text-decoration: underline; color: var(--color-primary-dark); }
+.legal-content .updated { font-size: 0.82rem; color: #8a7962; font-style: italic; margin-top: 40px; }
+
+footer.site-footer { background: var(--color-dark); color: #cbb89e; padding: 56px 0 24px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+.footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.footer-logo { height: 100px; width: auto; display: block; }
+.footer-desc { font-size: 0.88rem; max-width: 320px; }
+footer h4 { color: #fff; font-size: 0.95rem; margin-bottom: 16px; letter-spacing: 0.5px; }
+footer ul li { margin-bottom: 10px; font-size: 0.9rem; }
+footer a:hover { color: var(--color-tan); }
+.footer-legal { text-align: center; font-size: 0.8rem; margin-bottom: 14px; color: #96826a; }
+.footer-legal a { color: #cbb89e; }
+.footer-legal a:hover { color: var(--color-tan); text-decoration: underline; }
+.footer-legal .sep { margin: 0 8px; color: #6b5744; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 0.82rem; color: #96826a; }
+
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  nav.main-nav { position: fixed; top: 73px; left: 0; right: 0; background: var(--color-cream); flex-direction: column; padding: 24px; gap: 20px; border-bottom: 1px solid var(--color-border); transform: translateY(-130%); transition: transform 0.3s ease; }
+  nav.main-nav.open { transform: translateY(0); }
+  .menu-toggle { display: flex; }
+  .header-phone { display: none; }
+}
+@media (max-width: 600px) {
+  .legal-content { padding: 28px 22px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.png" alt="Zapatero Cordero - Logo" class="brand-mark" />
+      <span class="brand-text"><b>Zapatero Cordero</b><small>Sevilla · Desde 2015</small></span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="servicios.html">Servicios</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <a href="tel:+34647436372" class="header-phone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 6 6L16 14l5 2v4c0 1-1 2-2 2C11 22 2 13 2 5c0-1 1-2 2-2z"/></svg>
+      647 43 63 72
+    </a>
+    <button class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <span style="text-transform:uppercase;letter-spacing:3px;font-size:0.8rem;color:var(--color-tan);">Información legal</span>
+    <h1>Política de Privacidad</h1>
+    <p>Cómo tratamos tus datos cuando contactas con nosotros.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="legal-content">
+      <h2>1. Responsable del tratamiento</h2>
+      <ul>
+        <li><strong>Titular:</strong> Francisco Manuel Cordero González</li>
+        <li><strong>NIF:</strong> 28597855T</li>
+        <li><strong>Domicilio:</strong> Calle Baños, 6 — Sevilla Centro, Sevilla, España</li>
+        <li><strong>Teléfono:</strong> 647 43 63 72</li>
+      </ul>
+
+      <h2>2. ¿Qué datos tratamos?</h2>
+      <p>Este sitio web no dispone de formularios de contacto ni de sistemas de registro o suscripción. Los únicos datos personales que el titular puede llegar a tratar son los que el usuario facilita voluntariamente al iniciar contacto por teléfono o por WhatsApp (por ejemplo, nombre, número de teléfono y el contenido de la conversación).</p>
+
+      <h2>3. Finalidad del tratamiento</h2>
+      <p>Atender consultas, presupuestos y solicitudes relacionadas con los servicios de reparación de calzado, copia de llaves y artículos de piel del taller.</p>
+
+      <h2>4. Legitimación</h2>
+      <p>El tratamiento se basa en el consentimiento del interesado, manifestado libremente al iniciar el contacto de forma voluntaria (llamada telefónica o mensaje de WhatsApp).</p>
+
+      <h2>5. Conservación de los datos</h2>
+      <p>Los datos se conservan únicamente durante el tiempo necesario para atender la consulta o solicitud, y no se emplean para ninguna otra finalidad ni se incorporan a ficheros o bases de datos.</p>
+
+      <h2>6. Destinatarios y cesión de datos</h2>
+      <p>No se ceden datos personales a terceros, salvo obligación legal. Las conversaciones mantenidas por WhatsApp se gestionan a través de la plataforma de WhatsApp (Meta Platforms, Inc.), que dispone de su propia política de privacidad, ajena a este sitio web.</p>
+
+      <h2>7. Tus derechos</h2>
+      <p>Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad llamando al <a href="tel:+34647436372" class="inline-link">647 43 63 72</a>. Asimismo, tienes derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener" class="inline-link">www.aepd.es</a>) si consideras que el tratamiento de tus datos no se ajusta a la normativa vigente.</p>
+
+      <h2>8. Menores de edad</h2>
+      <p>Este sitio web y los servicios que ofrece no están dirigidos a menores de 14 años.</p>
+
+      <h2>9. Cambios en esta política</h2>
+      <p>Esta política de privacidad puede actualizarse para adaptarse a novedades legislativas o a cambios en el propio sitio web. Se recomienda revisarla periódicamente.</p>
+
+      <p class="updated">Última actualización: agosto de 2026.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="assets/logo.png" alt="Zapatero Cordero - Logo" class="footer-logo" />
+        </div>
+        <p class="footer-desc">Reparación de calzado, copia de llaves y artículos de piel en Sevilla Centro. Oficio a mano desde 2015.</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li>Calle Baños, 6 — Sevilla Centro</li>
+          <li><a href="tel:+34647436372">647 43 63 72</a></li>
+          <li>Lun–Jue: 9:30–14:00, 17:30–20:15</li>
+          <li>Vie–Sáb: 9:30–14:00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <a href="aviso-legal.html">Aviso Legal</a><span class="sep">·</span><a href="politica-privacidad.html">Política de Privacidad</a><span class="sep">·</span><a href="politica-cookies.html">Política de Cookies</a>
+    </div>
+    <div class="footer-bottom">© 2026 Zapatero Cordero — Sevilla. Todos los derechos reservados.</div>
+  </div>
+</footer>
+
+<script>
+  var toggle = document.querySelector('.menu-toggle');
+  var nav = document.querySelector('.main-nav');
+  if (toggle && nav) {
+    toggle.addEventListener('click', function () { nav.classList.toggle('open'); });
+  }
+</script>
+</body>
+</html>
