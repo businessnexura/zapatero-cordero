@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cordero-zapatero.vercel.app/</loc>
+    <loc>https://zapatero-cordero.vercel.app/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://cordero-zapatero.vercel.app/servicios</loc>
+    <loc>https://zapatero-cordero.vercel.app/servicios</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cordero-zapatero.vercel.app/nosotros</loc>
+    <loc>https://zapatero-cordero.vercel.app/nosotros</loc>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://cordero-zapatero.vercel.app/contacto</loc>
+    <loc>https://zapatero-cordero.vercel.app/contacto</loc>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://cordero-zapatero.vercel.app/aviso-legal</loc>
+    <loc>https://zapatero-cordero.vercel.app/aviso-legal</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://cordero-zapatero.vercel.app/politica-privacidad</loc>
+    <loc>https://zapatero-cordero.vercel.app/politica-privacidad</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://cordero-zapatero.vercel.app/politica-cookies</loc>
+    <loc>https://zapatero-cordero.vercel.app/politica-cookies</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
