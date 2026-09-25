@@ -449,7 +449,9 @@ footer a:hover { color: var(--color-tan); }
   var fill = document.getElementById('progressFill');
   if (!video || !hero || !sticky) return;
 
-  // Recorte central 5:4 a 1440 px, con un fotograma clave cada 6: permite "rebobinar" con el scroll sin tirones
+  // Recorte central 5:4 con un fotograma clave cada 6: permite "rebobinar" con el scroll sin tirones.
+  // Versión pequeña (720 px, ~1 MB) para arrancar rápido y versión HD (1440 px, ~3,4 MB) que la sustituye.
+  var SCROLL_LITE_SRC = 'assets/hero-cordero-scroll-lite.mp4';
   var SCROLL_SRC = 'assets/hero-cordero-scroll.mp4';
   // versión ligera (poco más de 1 MB) que se reproduce en bucle en móvil y tablet
   var MOBILE_SRC = 'assets/hero-cordero-mobile.mp4';
@@ -473,9 +475,12 @@ footer a:hover { color: var(--color-tan); }
     return;
   }
 
-  // Escritorio: el vídeo avanza fotograma a fotograma con el scroll
+  // Escritorio: el vídeo avanza fotograma a fotograma con el scroll.
+  // Se carga primero una versión pequeña (arranca en ~1 s incluso con datos móviles) y, cuando
+  // termina de bajar la versión HD, se cambia sin que se note.
   var EASE = 0.2;          // suavidad del movimiento (0 = muy lento, 1 = sin suavizar)
   var MIN_STEP = 1 / 48;   // no se busca un nuevo fotograma si la diferencia es menor a medio fotograma
+  var active = video;      // vídeo que se está moviendo con el scroll
   var ready = false;
   var raf = 0;
   var current = 0;         // progreso mostrado (0-1)
@@ -495,17 +500,17 @@ footer a:hover { color: var(--color-tan); }
 
   function frame() {
     raf = 0;
-    if (!ready || !video.duration) return;
+    if (!ready || !active.duration) return;
 
     var target = targetProgress();
     current += (target - current) * EASE;
     if (Math.abs(target - current) < 0.0004) current = target;
 
     // se evita pedir justo el final: en algunos navegadores da un fotograma negro
-    var time = current * Math.max(video.duration - 0.04, 0);
+    var time = current * Math.max(active.duration - 0.04, 0);
     var pending = Math.abs(time - lastSet) > MIN_STEP;
-    if (pending && !video.seeking) {
-      video.currentTime = time;
+    if (pending && !active.seeking) {
+      active.currentTime = time;
       lastSet = time;
       pending = false;
     }
@@ -518,38 +523,68 @@ footer a:hover { color: var(--color-tan); }
     if (!raf) raf = requestAnimationFrame(frame);
   }
 
+  // Descarga un vídeo entero a memoria (así todos los fotogramas están disponibles y el scroll
+  // no depende de la red, que era lo que provocaba los tirones y los bloqueos).
+  function download(src) {
+    if (!(window.fetch && window.URL && window.Blob)) return Promise.resolve(src);
+    return fetch(src)
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.blob();
+      })
+      .then(function (blob) { return URL.createObjectURL(blob); })
+      .catch(function () { return src; }); // si falla, se intenta el modo normal
+  }
+
   function onReady() {
     if (ready) return;
     ready = true;
     video.pause();
     measure();
     schedule(); // si la página se recarga a mitad del hero, se coloca en el fotograma correcto
+    upgrade();
   }
 
-  video.addEventListener('loadeddata', onReady);
+  // Cuando termina de bajar la versión HD se coloca detrás, en el mismo fotograma, y se muestra
+  // solo cuando ya está lista, para que no haya parpadeos.
+  function upgrade() {
+    var conn = navigator.connection;
+    if (conn && (conn.saveData || /2g|3g/.test(conn.effectiveType || ''))) return; // ahorro de datos: se queda la ligera
+    download(SCROLL_SRC).then(function (url) {
+      var hd = video.cloneNode(false);
+      hd.removeAttribute('id');
+      hd.removeAttribute('src');
+      hd.style.opacity = '0';
+      hd.muted = true;
+      hd.playsInline = true;
+      hd.addEventListener('loadeddata', function () {
+        hd.pause();
+        hd.currentTime = Math.min(video.currentTime * (hd.duration / video.duration), hd.duration - 0.04);
+      }, { once: true });
+      hd.addEventListener('seeked', function () {
+        video.parentNode.insertBefore(hd, video.nextSibling);
+        hd.style.opacity = '1';
+        active = hd;
+        lastSet = -1;
+        schedule();
+        setTimeout(function () { video.removeAttribute('src'); video.load(); video.style.display = 'none'; }, 300);
+      }, { once: true });
+      hd.preload = 'auto';
+      hd.src = url;
+    });
+  }
+
+  video.addEventListener('loadeddata', onReady, { once: true });
   video.addEventListener('seeked', schedule);
+  document.addEventListener('seeked', schedule, true);
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', function () { measure(); schedule(); });
 
-  function load(src) {
+  download(SCROLL_LITE_SRC).then(function (url) {
     video.preload = 'auto';
-    video.src = src;
+    video.src = url;
     video.load();
-  }
-
-  // Se descarga el vídeo entero antes de usarlo: así todos los fotogramas están en memoria
-  // y el scroll no depende de la red (que era lo que provocaba los tirones y los bloqueos).
-  if (window.fetch && window.URL && window.Blob) {
-    fetch(SCROLL_SRC)
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.blob();
-      })
-      .then(function (blob) { load(URL.createObjectURL(blob)); })
-      .catch(function () { load(SCROLL_SRC); }); // si falla, se intenta el modo normal
-  } else {
-    load(SCROLL_SRC);
-  }
+  });
 })();
 </script>
 </body>
