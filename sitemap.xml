@@ -21,6 +21,21 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.zapaterocordero.com/arreglo-de-calzado-sevilla</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.zapaterocordero.com/copia-de-llaves-sevilla</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.zapaterocordero.com/cambio-de-bombin-sevilla</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.zapaterocordero.com/aviso-legal</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
