@@ -1,4 +1,12 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "zapatero-cordero.vercel.app" }],
+      "destination": "https://www.zapaterocordero.com/$1",
+      "permanent": true
+    }
+  ]
 }

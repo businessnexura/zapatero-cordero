@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zapatero-cordero.vercel.app/sitemap.xml
+Sitemap: https://www.zapaterocordero.com/sitemap.xml
