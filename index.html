@@ -21,6 +21,7 @@
 <meta name="twitter:image" content="https://zapatero-cordero.vercel.app/assets/logo.png" />
 <meta name="theme-color" content="#2b1b12" />
 <link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="preload" as="image" href="assets/hero-poster.jpg" fetchpriority="high" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -85,16 +86,20 @@ nav.main-nav a.active, nav.main-nav a:hover { color: var(--color-primary); }
 
 /* Hero — Scroll Video */
 .scroll-video-hero {
+  --header-h: 73px; /* altura de la cabecera fija: el hero ocupa justo el resto de la pantalla */
   height: 500vh; /* Controla la velocidad: más altura = scroll más lento */
   position: relative;
+  padding: 0; /* anula el padding global de "section", que desajustaba el cálculo del scroll */
 }
 
 .scroll-video-sticky {
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: var(--header-h);
+  height: calc(100vh - var(--header-h));
   width: 100%;
   overflow: hidden;
+  /* Respaldo: si el vídeo tarda o no carga, se ve el póster en vez de un hueco vacío */
+  background: var(--color-dark) url('assets/hero-poster.jpg') center / cover no-repeat;
 }
 
 .scroll-video-sticky video {
@@ -140,13 +145,20 @@ nav.main-nav a.active, nav.main-nav a:hover { color: var(--color-primary); }
   transition: width 0.05s linear;
 }
 
-@media (max-width: 768px) {
-  .scroll-video-hero { height: 100vh; }
-  .scroll-video-sticky { position: relative; }
+/* Móvil: vídeo ligero en bucle, sin animación por scroll. La altura se adapta al contenido. */
+@media (max-width: 768px), (pointer: coarse) {
+  .scroll-video-hero { height: auto; min-height: calc(100vh - var(--header-h)); min-height: calc(100svh - var(--header-h)); }
+  .scroll-video-sticky { position: relative; top: 0; height: auto; min-height: inherit; display: flex; }
+  .hero-content { position: relative; height: auto; min-height: inherit; padding: 48px 20px; }
+  .scroll-progress-bar { display: none; }
 }
 
+/* Movimiento reducido: solo el póster, sin animación */
 @media (prefers-reduced-motion: reduce) {
-  .scroll-video-hero { height: 100vh; }
+  .scroll-video-hero { height: auto; min-height: calc(100vh - var(--header-h)); }
+  .scroll-video-sticky { position: relative; top: 0; height: auto; min-height: inherit; display: flex; }
+  .hero-content { position: relative; height: auto; min-height: inherit; padding: 48px 20px; }
+  .scroll-progress-bar { display: none; }
 }
 
 .hero-inner { max-width: 760px; padding: 0 24px; position: relative; z-index: 2; }
@@ -254,13 +266,17 @@ footer a:hover { color: var(--color-tan); }
 <!-- SCROLL-VIDEO-SECTION -->
 <section class="scroll-video-hero" id="scroll-hero">
   <div class="scroll-video-sticky">
+    <!-- El origen del vídeo (sin sonido) lo asigna el script del final según el dispositivo -->
     <video
       id="heroVideo"
-      src="assets/hero-cordero.mp4"
       poster="assets/hero-poster.jpg"
       playsinline
       muted
-      preload="metadata"
+      preload="auto"
+      aria-hidden="true"
+      tabindex="-1"
+      disablepictureinpicture
+      disableremoteplayback
     ></video>
     <div class="hero-content">
       <div class="hero-inner">
@@ -426,66 +442,114 @@ footer a:hover { color: var(--color-tan); }
   }
 </script>
 <script>
-(function() {
-  const video = document.getElementById('heroVideo');
-  const hero = document.getElementById('scroll-hero');
-  const progressFill = document.getElementById('progressFill');
+(function () {
+  var video = document.getElementById('heroVideo');
+  var hero = document.getElementById('scroll-hero');
+  var sticky = hero && hero.querySelector('.scroll-video-sticky');
+  var fill = document.getElementById('progressFill');
+  if (!video || !hero || !sticky) return;
 
-  if (!video || !hero) return;
+  // Recorte central 5:4 a 1440 px, con un fotograma clave cada 6: permite "rebobinar" con el scroll sin tirones
+  var SCROLL_SRC = 'assets/hero-cordero-scroll.mp4';
+  // versión ligera (poco más de 1 MB) que se reproduce en bucle en móvil y tablet
+  var MOBILE_SRC = 'assets/hero-cordero-mobile.mp4';
 
-  const isMobile = window.matchMedia('(max-width: 768px)').matches;
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isMobile = window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (isMobile || prefersReduced) {
-    video.autoplay = true;
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+
+  // Movimiento reducido: se queda el póster, sin descargar ni mover nada
+  if (reduceMotion) return;
+
+  // Móvil y tablet: el efecto por scroll va mal en pantallas táctiles, así que va en bucle
+  if (isMobile) {
     video.loop = true;
-    video.play().catch(() => {});
+    video.src = MOBILE_SRC;
+    var playing = video.play();
+    if (playing && playing.catch) playing.catch(function () {}); // si el móvil lo bloquea, queda el póster
     return;
   }
 
-  video.pause();
-  video.currentTime = 0;
+  // Escritorio: el vídeo avanza fotograma a fotograma con el scroll
+  var EASE = 0.2;          // suavidad del movimiento (0 = muy lento, 1 = sin suavizar)
+  var MIN_STEP = 1 / 48;   // no se busca un nuevo fotograma si la diferencia es menor a medio fotograma
+  var ready = false;
+  var raf = 0;
+  var current = 0;         // progreso mostrado (0-1)
+  var lastSet = -1;        // último instante pedido al vídeo
+  var stickyTop = 0;
 
-  function updateVideo() {
-    if (!video.duration || isNaN(video.duration)) return;
-
-    const heroRect = hero.getBoundingClientRect();
-    const heroTop = heroRect.top;
-    const heroHeight = hero.offsetHeight;
-    const windowHeight = window.innerHeight;
-
-    const scrolled = -heroTop;
-    const scrollable = heroHeight - windowHeight;
-
-    if (scrolled <= 0) {
-      video.currentTime = 0;
-      if (progressFill) progressFill.style.width = '0%';
-      return;
-    }
-
-    if (scrolled >= scrollable) {
-      video.currentTime = video.duration;
-      if (progressFill) progressFill.style.width = '100%';
-      return;
-    }
-
-    const progress = scrolled / scrollable;
-    video.currentTime = progress * video.duration;
-    if (progressFill) progressFill.style.width = (progress * 100) + '%';
+  function measure() {
+    stickyTop = parseFloat(getComputedStyle(sticky).top) || 0;
   }
 
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        updateVideo();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
+  function targetProgress() {
+    var scrollable = hero.offsetHeight - sticky.offsetHeight;
+    if (scrollable <= 0) return 0;
+    var p = (stickyTop - hero.getBoundingClientRect().top) / scrollable;
+    return p < 0 ? 0 : p > 1 ? 1 : p;
+  }
 
-  window.addEventListener('resize', updateVideo);
+  function frame() {
+    raf = 0;
+    if (!ready || !video.duration) return;
+
+    var target = targetProgress();
+    current += (target - current) * EASE;
+    if (Math.abs(target - current) < 0.0004) current = target;
+
+    // se evita pedir justo el final: en algunos navegadores da un fotograma negro
+    var time = current * Math.max(video.duration - 0.04, 0);
+    var pending = Math.abs(time - lastSet) > MIN_STEP;
+    if (pending && !video.seeking) {
+      video.currentTime = time;
+      lastSet = time;
+      pending = false;
+    }
+
+    if (fill) fill.style.width = (current * 100) + '%';
+    if (current !== target || pending) schedule();
+  }
+
+  function schedule() {
+    if (!raf) raf = requestAnimationFrame(frame);
+  }
+
+  function onReady() {
+    if (ready) return;
+    ready = true;
+    video.pause();
+    measure();
+    schedule(); // si la página se recarga a mitad del hero, se coloca en el fotograma correcto
+  }
+
+  video.addEventListener('loadeddata', onReady);
+  video.addEventListener('seeked', schedule);
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', function () { measure(); schedule(); });
+
+  function load(src) {
+    video.preload = 'auto';
+    video.src = src;
+    video.load();
+  }
+
+  // Se descarga el vídeo entero antes de usarlo: así todos los fotogramas están en memoria
+  // y el scroll no depende de la red (que era lo que provocaba los tirones y los bloqueos).
+  if (window.fetch && window.URL && window.Blob) {
+    fetch(SCROLL_SRC)
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.blob();
+      })
+      .then(function (blob) { load(URL.createObjectURL(blob)); })
+      .catch(function () { load(SCROLL_SRC); }); // si falla, se intenta el modo normal
+  } else {
+    load(SCROLL_SRC);
+  }
 })();
 </script>
 </body>
